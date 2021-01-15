@@ -4,6 +4,14 @@
  * Generates MIPS assembly.
 */
 
+unsigned char REGISTERS = {
+	1,1,1,1,
+	1,1,1,1,
+	1,1,1,1,
+	1,1,1,1
+};
+
+
 
 // r1 = r1+r2
 int reg_add(int r1, int r2);
