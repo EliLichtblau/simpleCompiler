@@ -41,9 +41,8 @@ static LexToken *new_token() {
 
 
 /*
-
-15 + 7
-+ 7
+ * Matches a token and removes it from passed string. Returns NULL on empty string.
+ * Tokens include: (, ), -,+,*,/, int()
 
 */
 LexToken *match_token(char **str) {
@@ -55,7 +54,7 @@ LexToken *match_token(char **str) {
 	}
 
 
-	if (length = regex_match("^(\\s)*(\\-)?(([0-9]+\\.?[0-9]*)|[0-9]*\\.[0-9]+)", *str)) {
+	if (length = regex_match("^(\\s)*(\\-)?[0-9]+", *str)) {
 		token = new_token();
 		token->token_type = TOK_INT;
 		tmp = malloc(length+1);
@@ -98,9 +97,7 @@ LexToken *match_token(char **str) {
 
 
 LexToken *tokenize(char **str) {
-	LexToken *head = NULL;
-	LexToken *tail;
-	LexToken *token;
+	LexToken *tail, *token, *head = NULL;
 	while ((token = match_token(str)) != NULL) {
 		if (head == NULL) {
 			head = token;
@@ -116,7 +113,9 @@ LexToken *tokenize(char **str) {
 }
 
 
-
+/* 
+ * Takes a LexToken linked list head and prints the lsit
+*/
 void print_lex_tokens(LexToken *head) {
 	while (head != NULL) {
 		if (head ->token_type == TOK_INT) 
@@ -129,14 +128,5 @@ void print_lex_tokens(LexToken *head) {
 	printf("\n");
 }
 
-
-
-int main() {
-	char *str = "(71+3)*4";
-	//match_token(&str);
-	print_lex_tokens(tokenize(&str));
-	//int r = regex_match("^(\\s)*(\\-)?(([0-9]+\\.?[0-9]*)|[0-9]*\\.[0-9]+)",str);
-	//printf("%d\n", r);
-}
 
 

@@ -36,5 +36,9 @@ typedef struct _lex_token{
 
 
 LexToken *match_token(char **str);
+LexToken *tokenize(char **str);
+void print_lex_tokens(LexToken *head);
+
+
 
 #endif
