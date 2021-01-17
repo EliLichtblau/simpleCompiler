@@ -24,6 +24,9 @@
 
 
 
+
+
+
 typedef struct _lex_token{
 	int token_type;
 
@@ -35,10 +38,20 @@ typedef struct _lex_token{
 } LexToken;
 
 
-LexToken *match_token(char **str);
-LexToken *tokenize(char **str);
-void print_lex_tokens(LexToken *head);
 
+typedef struct {
+	LexToken *head;
+	LexToken *tail;
+
+} TokenList;
+
+
+LexToken *match_token(char **str);
+TokenList *tokenize(char **str);
+void print_lex_tokens(TokenList *);
+
+LexToken *peek(TokenList *token_list);
+void pop(TokenList *token_list);
 
 
 #endif

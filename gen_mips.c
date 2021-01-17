@@ -1,29 +1,39 @@
 #include "gen_mips.h"
 #include <stdlib.h>
-#include <stido.h>
+#include <stdio.h>
 
-FILE *outfile = NULL;
+static void free_register(int reg);
+static int alloc_register();
 
-
+int REGISTERS[] = {
+	1,1,1,1,
+	1,1,1,1,
+	1,1,1,1,
+	1,1,1,1
+};
 
 
 int add_registers(int r1, int r2) {
-	fprintf(outfile, "add $r%d $r%d\n", r1, r2);
+	fprintf(outfile, "add $t%d, $t%d, $t%d \n", r1, r2, r1);
+	free_register(r2);
 	return r1;
 }
 
 int subtract_registers(int r1, int r2) {
-	fprintf(outfile, "sub $r%d $r%d\n", r1, r2);
+	fprintf(outfile, "sub $t%d, $t%d, $t%d \n", r1, r2, r1);
+	free_register(r2);
 	return r1;
 }
 
 int multiply_registers(int r1, int r2) {
-	fprintf(outfile, "mul $r%d $r%d\n", r1, r2);
+	fprintf(outfile, "mul $t%d, $t%d, $t%d \n", r1, r2, r1);
+	free_register(r2);
 	return r1;
 }
 
 int divide_registers(int r1, int r2) {
-	fprintf(outfile, "div $r%d $r%d\n", r1, r2);
+	fprintf(outfile, "div $t%d, $t%d, $t%d \n", r1, r2, r1);
+	free_register(r2);
 	return r1;
 
 }
@@ -41,18 +51,18 @@ int load_register(int value) {
 		exit(1);
 	}
 
-	fprintf(outfile, "li $r%d %d\n", reg, value);
+	fprintf(outfile, "li $t%d, %d\n", reg, value);
 	return reg;
 }
 
 
-void free_register(int reg) {
+static void free_register(int reg) {
 	REGISTERS[reg] = 1;
 }
 
 
 
-int alloc_register() {
+static int alloc_register() {
 	int i;
 	for (i = 0; i < N_REGS; i++) {
 		if (REGISTERS[i] == 1) {
@@ -63,3 +73,4 @@ int alloc_register() {
 
 	return -1;
 }
+

@@ -1,4 +1,5 @@
 #include "lexer.h"
+
 #include <regex.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,7 +33,7 @@ static const char *NUM_TO_TOKEN[] = {
 
 
 
-
+/* Allocate token, initialize parameters */
 static LexToken *new_token() {
 	LexToken *token = malloc(sizeof(LexToken));
 	token->next = NULL;
@@ -95,9 +96,12 @@ LexToken *match_token(char **str) {
 
 
 
-
-LexToken *tokenize(char **str) {
+/* 
+ * Transform string into linked list of tokens
+*/
+TokenList *tokenize(char **str) {
 	LexToken *tail, *token, *head = NULL;
+	TokenList *list = malloc(sizeof(TokenList));
 	while ((token = match_token(str)) != NULL) {
 		if (head == NULL) {
 			head = token;
@@ -108,15 +112,40 @@ LexToken *tokenize(char **str) {
 		}
 		
 	}
-
-	return head;
+	list->head = head;
+	list->tail = tail;
+	return list;
 }
+
+
+
+
+
+/* show first item in lexer token list */
+LexToken *peek(TokenList *list) {
+	if (list == NULL)
+		return NULL;
+	return list->head;
+}
+
+
+/* remove it from it list */
+void pop(TokenList *list) {
+	if (list != NULL && list->head != NULL) {
+		LexToken *tmp = list->head;
+		list->head = list->head->next;
+		//free(tmp);
+	}
+}	
+
+
 
 
 /* 
  * Takes a LexToken linked list head and prints the lsit
 */
-void print_lex_tokens(LexToken *head) {
+void print_lex_tokens(TokenList *list) {
+	LexToken *head = list->head;
 	while (head != NULL) {
 		if (head ->token_type == TOK_INT) 
 			printf("(%s; %d) ", NUM_TO_TOKEN[head->token_type], head->value);
